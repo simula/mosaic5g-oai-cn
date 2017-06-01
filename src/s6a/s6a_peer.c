@@ -106,6 +106,7 @@ s6a_fd_new_peer (
   }
 
   DevAssert (gethostname (host_name, 100) == 0);
+  strtok(host_name, ".");
   host_name_len = strlen (host_name);
   host_name[host_name_len] = '.';
   host_name[host_name_len + 1] = '\0';
