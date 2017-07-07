@@ -95,17 +95,14 @@ function main()
   if [[ $verbose -eq 1 ]]; then
     cecho "OPENAIR_DIR    = $OPENAIR_DIR" $green
   fi
-    
-  
+
+
   local dbin=$OPENAIR_DIR/targets/bin
   local dlog=$OPENAIR_DIR/cmake_targets/log
   local dconf=$OPENAIR_DIR/targets/bin
-  
+
   mkdir -m 777 -p $dbin $dlog
-  
-  
-  
-  
+
   ##############################################################################
   # Compile fake eNB
   ##############################################################################
@@ -119,10 +116,10 @@ function main()
   cd ./build
   cmake  $cmake_args ..
   compilations s1c_mme_test test_s1c_mme test_s1c_mme 
+  if [ $? -gt 0 ]; then
+      exit 1
+  fi
 
-    
 }
 
-
 main "$@"
-
