@@ -306,6 +306,9 @@ void log_set_config(const log_config_t * const config)
     if ((MAX_LOG_LEVEL > config->util_log_level) && (MIN_LOG_LEVEL <= config->util_log_level))         g_oai_log.log_level[LOG_UTIL]     = config->util_log_level;
     if ((MAX_LOG_LEVEL > config->msc_log_level) && (MIN_LOG_LEVEL <= config->msc_log_level))           g_oai_log.log_level[LOG_MSC]      = config->msc_log_level;
     if ((MAX_LOG_LEVEL > config->itti_log_level) && (MIN_LOG_LEVEL <= config->itti_log_level))         g_oai_log.log_level[LOG_ITTI]     = config->itti_log_level;
+#if ENABLE_GRPC_API
+    if ((MAX_LOG_LEVEL > config->grpc_log_level) && (MIN_LOG_LEVEL <= config->grpc_log_level))         g_oai_log.log_level[LOG_GRPC]     = config->grpc_log_level;
+#endif
 
     g_oai_log.is_output_fd_buffered = config->is_output_thread_safe;
 
@@ -473,6 +476,9 @@ log_init (
   rv = snprintf (&g_oai_log.log_proto2str[LOG_CONFIG][0], LOG_MAX_PROTO_NAME_LENGTH, "CONFIG");
   rv = snprintf (&g_oai_log.log_proto2str[LOG_MSC][0], LOG_MAX_PROTO_NAME_LENGTH, "MSC");
   rv = snprintf (&g_oai_log.log_proto2str[LOG_ITTI][0], LOG_MAX_PROTO_NAME_LENGTH, "ITTI");
+#if ENABLE_GRPC_API
+  rv = snprintf (&g_oai_log.log_proto2str[LOG_GRPC][0], LOG_MAX_PROTO_NAME_LENGTH, "GRPC");
+#endif
 
   rv = snprintf (&g_oai_log.log_level2str[OAILOG_LEVEL_TRACE][0], LOG_LEVEL_NAME_MAX_LENGTH, "TRACE");
   rv = snprintf (&g_oai_log.log_level2str[OAILOG_LEVEL_DEBUG][0], LOG_LEVEL_NAME_MAX_LENGTH, "DEBUG");

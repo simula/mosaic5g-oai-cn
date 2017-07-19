@@ -58,6 +58,10 @@
 #include "oai_mme.h"
 #include "pid_file.h"
 
+#if ENABLE_GRPC_API
+#include "grpc_server.h"
+#endif
+
 int
 main (
   int argc,
@@ -145,6 +149,9 @@ main (
   CHECK_INIT_RETURN (s1ap_mme_init());
   CHECK_INIT_RETURN (mme_app_init (&mme_config));
   CHECK_INIT_RETURN (s6a_init (&mme_config));
+#if ENABLE_GRPC_API
+  CHECK_INIT_RETURN (grpc_server_init());
+#endif
 
   OAILOG_DEBUG(LOG_MME_APP, "MME app initialization complete\n");
   /*

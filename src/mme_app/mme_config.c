@@ -107,6 +107,9 @@ static void mme_config_init (mme_config_t * config_pP)
   config_pP->log_config.util_log_level     = MAX_LOG_LEVEL;
   config_pP->log_config.msc_log_level      = MAX_LOG_LEVEL;
   config_pP->log_config.itti_log_level     = MAX_LOG_LEVEL;
+#if ENABLE_GRPC_API
+  config_pP->log_config.grpc_log_level     = MAX_LOG_LEVEL;
+#endif
 
   config_pP->log_config.asn1_verbosity_level = 0;
   config_pP->config_file = NULL;
@@ -273,6 +276,11 @@ static int mme_config_parse_file (mme_config_t * config_pP)
 
       if (config_setting_lookup_string (setting, LOG_CONFIG_STRING_ITTI_LOG_LEVEL, (const char **)&astring))
         config_pP->log_config.itti_log_level = OAILOG_LEVEL_STR2INT (astring);
+
+#if ENABLE_GRPC_API
+      if (config_setting_lookup_string (setting, LOG_CONFIG_STRING_GRPC_LOG_LEVEL, (const char **)&astring))
+        config_pP->log_config.grpc_log_level = OAILOG_LEVEL_STR2INT (astring);
+#endif
 
       if ((config_setting_lookup_string (setting_mme, MME_CONFIG_STRING_ASN1_VERBOSITY, (const char **)&astring))) {
         if (strcasecmp (astring, MME_CONFIG_STRING_ASN1_VERBOSITY_NONE) == 0)
@@ -772,6 +780,9 @@ static void mme_config_display (mme_config_t * config_pP)
   OAILOG_INFO (LOG_CONFIG, "    UTIL log level.......: %s\n", OAILOG_LEVEL_INT2STR(config_pP->log_config.util_log_level));
   OAILOG_INFO (LOG_CONFIG, "    MSC log level........: %s (MeSsage Chart)\n", OAILOG_LEVEL_INT2STR(config_pP->log_config.msc_log_level));
   OAILOG_INFO (LOG_CONFIG, "    ITTI log level.......: %s (InTer-Task Interface)\n", OAILOG_LEVEL_INT2STR(config_pP->log_config.itti_log_level));
+#if ENABLE_GRPC_API
+  OAILOG_INFO (LOG_CONFIG, "    GRPC API log level.......: %s\n", OAILOG_LEVEL_INT2STR(config_pP->log_config.grpc_log_level));
+#endif
 }
 
 //------------------------------------------------------------------------------

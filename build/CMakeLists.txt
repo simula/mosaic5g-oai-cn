@@ -243,6 +243,7 @@ add_boolean_option( NAS_FORCE_REJECT_SR             True     "TEMP, TO be disabl
 add_boolean_option( NAS_FORCE_REJECT_TAU            True     "TEMP, TO be disabled for community after development and test: Force the EMM NAS layer to respond to any TAU Request by reject")
 
 add_boolean_option( TRACE_3GPP_SPEC                 True     "Log hits of 3GPP specifications requirements")
+add_boolean_option( ENABLE_GRPC_API                 False    "enable GRPC API (can't be set with ENABLE_ITTI_ANALYZER)")
 
 
 set (ITTI_DIR ${OPENAIRCN_DIR}/src/common/itti)
@@ -388,7 +389,6 @@ include_directories("${OPENAIRCN_DIR}/src/utils/bstr")
 include_directories("${OPENAIRCN_DIR}/src/sgw")
 include_directories("${OPENAIRCN_DIR}/src/mme_app")
 include_directories("${OPENAIRCN_DIR}/src/s6a")
-include_directories("${OPENAIRCN_DIR}/SRC")
 
 
 ###############################################################################
@@ -486,6 +486,43 @@ add_library(SCTP_SERVER
 
 
 add_library(UDP_SERVER ${OPENAIRCN_DIR}/src/udp/udp_primitives_server.c)
+
+if(${ENABLE_GRPC_API})
+
+    if(${ENABLE_ITTI_ANALYZER})
+        message( FATAL_ERROR "ENABLE_GRPC_API and ENABLE_ITTI_ANALYZER can't be both set to true")
+    endif(${ENABLE_ITTI_ANALYZER})
+
+    set(API_DIR ${OPENAIRCN_DIR}/src/api)
+
+    file(GLOB proto_source ${API_DIR}/proto/*.proto)
+
+    set(GRPC_SERVER_PROTO_generated
+        ${API_DIR}/proto/mme.pb.cc
+        ${API_DIR}/proto/mme.pb.h
+        ${API_DIR}/proto/mme.grpc.pb.cc
+        ${API_DIR}/proto/mme/grpc.pb.h
+        )
+
+    add_custom_command (
+        OUTPUT ${GRPC_SERVER_PROTO_generated}
+        COMMAND protoc --cpp_out=${API_DIR}/proto -I=${API_DIR}/proto ${proto_source}
+        COMMAND protoc --grpc_out=${API_DIR}/proto --plugin=protoc-gen-grpc=`which grpc_cpp_plugin` -I=${API_DIR}/proto ${proto_source}
+        COMMAND protoc --python_out=${API_DIR}/cli --grpc_out=${API_DIR}/cli --plugin=protoc-gen-grpc=`which grpc_python_plugin` -I=${API_DIR}/proto ${proto_source}
+        )
+
+    add_library(GRPC_SERVER
+        ${API_DIR}/grpc_server.cpp
+        ${API_DIR}/proto/mme.pb.cc
+        ${API_DIR}/proto/mme.grpc.pb.cc
+        )
+    set_target_properties(GRPC_SERVER PROPERTIES COMPILE_FLAGS "-std=c++11")
+    include_directories(${OPENAIRCN_DIR}/src/api)
+
+    set(GRPC_LIBRARIES  grpc++ protobuf)
+    set(GRPC_SERVER GRPC_SERVER)
+
+endif(${ENABLE_GRPC_API})
 
 set(S11_DIR ${OPENAIRCN_DIR}/src/s11)
 add_library(S11_MME
@@ -888,9 +925,9 @@ if( ITTI_ANALYZER )
 endif( ITTI_ANALYZER )
 target_link_libraries (mme
   -Wl,--start-group
-   LIB_NAS_MME S1AP_LIB S1AP_EPC S11_MME GTPV2C SCTP_SERVER UDP_SERVER SECU_CN  S6A MME_APP LFDS ${MSC_LIB} ${ITTI_LIB} CN_UTILS HASHTABLE BSTR
+  LIB_NAS_MME S1AP_LIB S1AP_EPC S11_MME GTPV2C SCTP_SERVER UDP_SERVER SECU_CN  S6A MME_APP LFDS ${MSC_LIB} ${ITTI_LIB} CN_UTILS HASHTABLE BSTR ${GRPC_SERVER}
   -Wl,--end-group
-  pthread m sctp  rt crypt ${CRYPTO_LIBRARIES} ${OPENSSL_LIBRARIES} ${NETTLE_LIBRARIES} ${CONFIG_LIBRARIES} gnutls fdproto fdcore
+  pthread m sctp  rt crypt ${CRYPTO_LIBRARIES} ${OPENSSL_LIBRARIES} ${NETTLE_LIBRARIES} ${CONFIG_LIBRARIES} gnutls fdproto fdcore ${GRPC_LIBRARIES}
   )
 
 

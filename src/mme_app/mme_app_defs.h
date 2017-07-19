@@ -29,6 +29,11 @@
 
 #ifndef FILE_MME_APP_DEFS_SEEN
 #define FILE_MME_APP_DEFS_SEEN
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "intertask_interface.h"
 #include "mme_app_ue_context.h"
 
@@ -126,5 +131,9 @@ void mme_app_handle_initial_context_setup_rsp_timer_expiry (struct ue_context_s 
 #define mme_stats_read_lock(mMEsTATS)  pthread_rwlock_rdlock(&(mMEsTATS)->rw_lock)
 #define mme_stats_write_lock(mMEsTATS) pthread_rwlock_wrlock(&(mMEsTATS)->rw_lock)
 #define mme_stats_unlock(mMEsTATS)     pthread_rwlock_unlock(&(mMEsTATS)->rw_lock)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* MME_APP_DEFS_H_ */
