@@ -710,6 +710,17 @@ sgw_handle_sgi_endpoint_deleted (
       OAILOG_DEBUG (LOG_SPGW_APP, "Rx SGI_DELETE_ENDPOINT_REQUEST: REQUEST_ACCEPTED\n");
        // if default bearer
 //#pragma message  "TODO define constant for default eps_bearer id"
+      if (spgw_config.sgw_config.is_remote_controller_enabled) {
+        struct in_addr remote_controller = {.s_addr = 0};
+        remote_controller.s_addr = spgw_config.sgw_config.ipv4.remote_controller;
+
+        char command[500];
+        snprintf(command, 500, "curl -X DELETE http://%s:%d/ue/%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", inet_ntoa(remote_controller), spgw_config.sgw_config.remote_controller_port, IMSI2(new_bearer_ctxt_info_p->sgw_eps_bearer_context_information.imsi));
+        system(command);
+        OAILOG_DEBUG (LOG_SPGW_APP, "Send delete bearer context request to remote controller\n");
+        OAILOG_DEBUG (LOG_SPGW_APP, "%s\n", command);
+      }
+
 
       rv = gtp_mod_kernel_tunnel_del(eps_bearer_entry_p->s_gw_teid_S1u_S12_S4_up, eps_bearer_entry_p->enb_teid_S1u);
 
@@ -985,6 +996,7 @@ sgw_handle_release_access_bearers_request (
 
     OAILOG_DEBUG (LOG_SPGW_APP, "Release Access Bearer Respone sent to SGW\n");
     OAILOG_FUNC_RETURN(LOG_SPGW_APP, rv);
+
   } else {
     release_access_bearers_resp_p->cause = CONTEXT_NOT_FOUND;
     release_access_bearers_resp_p->teid = 0;
