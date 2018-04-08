@@ -722,7 +722,7 @@ check_install_hss_software() {
   fi
 
   install_freediameter_from_source $1
-    
+  if [ $2 -eq 0 ]; then 
   case "$(get_distribution_release)" in
     "ubuntu14.04")
       PACKAGE_LIST="\
@@ -752,6 +752,7 @@ check_install_hss_software() {
       echo_fatal "$OS_DISTRO is not a supported distribution."
       ;;
   esac
+  end 
   $SUDO $INSTALLER install $OPTION $PACKAGE_LIST 
 }
 
@@ -893,33 +894,6 @@ check_install_mme_software() {
     echo_fatal "Failed to install package list $PACKAGE_LIST"
   fi
 
-  if [[ "$OS_DISTRO" == "ubuntu" ]]; then
-    PACKAGE_LIST="\
-      check \
-      phpmyadmin \
-      python-dev \
-      python-pexpect \
-      unzip"
-  elif [[ "$OS_DISTRO" == "rhel" ]] || [[ "$OS_DISTRO" == "centos" ]]; then
-    PACKAGE_LIST="\
-      check \
-      check-devel \
-      phpmyadmin \
-      python-devel \
-      pexpect \
-      psmisc \
-      unzip"
-  elif [[ "$OS_DISTRO" == "fedora" ]]; then
-    PACKAGE_LIST="\
-      check \
-      check-devel \
-      phpmyadmin \
-      python-devel \
-      python2-pexpect \
-      unzip"
-  else
-    echo_fatal "$OS_DISTRO is not a supported distribution."
-  fi
   $SUDO $INSTALLER install $OPTION $PACKAGE_LIST
   if [ $? -ne 0 ]; then
     echo_fatal "Failed to install package list $PACKAGE_LIST"
@@ -1047,27 +1021,6 @@ check_install_spgw_software() {
     echo_fatal "Failed to install package list $PACKAGE_LIST"
   fi
 
-  if [[ "$OS_DISTRO" == "ubuntu" ]]; then
-    PACKAGE_LIST="\
-      check \
-      python-dev \
-      python-pexpect \
-      unzip"
-  elif [[ "$OS_DISTRO" == "rhel" ]] || [[ "$OS_DISTRO" == "centos" ]]; then
-    PACKAGE_LIST="\
-      check \
-      python-devel \
-      pexpect \
-      unzip"
-  elif [[ "$OS_DISTRO" == "fedora" ]]; then
-    PACKAGE_LIST="\
-      check \
-      python-devel \
-      python2-pexpect \
-      unzip"
-  else
-    echo_fatal "$OS_DISTRO is not a supported distribution."
-  fi
   $SUDO $INSTALLER install $OPTION $PACKAGE_LIST
   if [ $? -ne 0 ]; then
     echo_fatal "Failed to install package list $PACKAGE_LIST"
