@@ -723,6 +723,7 @@ check_install_hss_software() {
 
   install_freediameter_from_source $1
   if [ $2 -eq 0 ]; then 
+
   case "$(get_distribution_release)" in
     "ubuntu14.04")
       PACKAGE_LIST="\
@@ -752,7 +753,7 @@ check_install_hss_software() {
       echo_fatal "$OS_DISTRO is not a supported distribution."
       ;;
   esac
-  end 
+  fi  
   $SUDO $INSTALLER install $OPTION $PACKAGE_LIST 
 }
 
