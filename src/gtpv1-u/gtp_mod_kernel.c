@@ -40,14 +40,14 @@ int gtp_mod_kernel_init(int *fd0, int *fd1u, struct in_addr *ue_net, int mask, i
       .sin_family = AF_INET,
       .sin_port = htons(3386),
       .sin_addr = {
-          .s_addr   = INADDR_ANY,
+          .s_addr   = spgw_config.sgw_config.ipv4.S1u_S12_S4_up,
       },
   };
   struct sockaddr_in sockaddr_fd1 = {
       .sin_family = AF_INET,
-      .sin_port = htons(GTPV1U_UDP_PORT),
+      .sin_port = htons(spgw_config.sgw_config.udp_port_S1u_S12_S4_up),
       .sin_addr = {
-          .s_addr   = INADDR_ANY,
+          .s_addr   = spgw_config.sgw_config.ipv4.S1u_S12_S4_up,
       },
   };
 
