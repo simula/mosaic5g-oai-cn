@@ -349,7 +349,7 @@ static int sctp_create_new_listener (SctpInit * init_p)
     }
   }
 
-  if ((sd = socket (AF_INET6, SOCK_STREAM, IPPROTO_SCTP)) < 0) {
+  if ((sd = socket (AF_INET, SOCK_STREAM, IPPROTO_SCTP)) < 0) {
     OAILOG_ERROR (LOG_SCTP, "socket: %s:%d\n", strerror (errno), errno);
     return -1;
   }
