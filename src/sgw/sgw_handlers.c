@@ -669,7 +669,7 @@ sgw_handle_sgi_endpoint_updated (
 
         char command[500];
         memset(command, 0, sizeof(command));
-        snprintf(command, 500, "curl -d '{\"eps_bearer_id\":%u, \"imsi\":\"%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\", \"s1_ul_teid\":\"0x%x\", \"s1_dl_teid\":\"0x%x\", \"ue_ip\":\"%d.%d.%d.%d\", \"enb_ip\":\"%d.%d.%d.%d\"}' -X POST http://%d.%d.%d.%d:%u/ue", eps_bearer_entry_p->eps_bearer_id, IMSI2(new_bearer_ctxt_info_p->sgw_eps_bearer_context_information.imsi), eps_bearer_entry_p->s_gw_teid_S1u_S12_S4_up, eps_bearer_entry_p->enb_teid_S1u, ue_s[0], ue_s[1], ue_s[2], ue_s[3], enb_s[0], enb_s[1], enb_s[2], enb_s[3], remote_controller[0], remote_controller[1], remote_controller[2], remote_controller[3], spgw_config.sgw_config.remote_controller_port);
+        snprintf(command, 500, "curl -d '{\"eps_bearer_id\":%u, \"imsi\":\"%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\", \"s1_ul_teid\":\"0x%x\", \"s1_dl_teid\":\"0x%x\", \"ue_ip\":\"%d.%d.%d.%d\", \"enb_ip\":\"%d.%d.%d.%d\"}' -X POST http://%d.%d.%d.%d:%u/bearer", eps_bearer_entry_p->eps_bearer_id, IMSI2(new_bearer_ctxt_info_p->sgw_eps_bearer_context_information.imsi), eps_bearer_entry_p->s_gw_teid_S1u_S12_S4_up, eps_bearer_entry_p->enb_teid_S1u, ue_s[0], ue_s[1], ue_s[2], ue_s[3], enb_s[0], enb_s[1], enb_s[2], enb_s[3], remote_controller[0], remote_controller[1], remote_controller[2], remote_controller[3], spgw_config.sgw_config.remote_controller_port);
         system(command);
         OAILOG_DEBUG (LOG_SPGW_APP, "Send add bearer context request to remote controller\n");
         OAILOG_DEBUG (LOG_SPGW_APP, "%s\n", command);
@@ -737,7 +737,7 @@ sgw_handle_sgi_endpoint_deleted (
         remote_controller.s_addr = spgw_config.sgw_config.ipv4.remote_controller;
 
         char command[500];
-        snprintf(command, 500, "curl -X DELETE http://%s:%d/ue/%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", inet_ntoa(remote_controller), spgw_config.sgw_config.remote_controller_port, IMSI2(new_bearer_ctxt_info_p->sgw_eps_bearer_context_information.imsi));
+        snprintf(command, 500, "curl -X DELETE http://%s:%d/bearer/%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", inet_ntoa(remote_controller), spgw_config.sgw_config.remote_controller_port, IMSI2(new_bearer_ctxt_info_p->sgw_eps_bearer_context_information.imsi));
         system(command);
         OAILOG_DEBUG (LOG_SPGW_APP, "Send delete bearer context request to remote controller\n");
         OAILOG_DEBUG (LOG_SPGW_APP, "%s\n", command);
