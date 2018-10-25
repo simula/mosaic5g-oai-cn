@@ -737,7 +737,7 @@ sgw_handle_sgi_endpoint_deleted (
         remote_controller.s_addr = spgw_config.sgw_config.ipv4.remote_controller;
 
         char command[500];
-        snprintf(command, 500, "curl -X DELETE http://%s:%d/bearer/%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", inet_ntoa(remote_controller), spgw_config.sgw_config.remote_controller_port, IMSI2(new_bearer_ctxt_info_p->sgw_eps_bearer_context_information.imsi));
+        snprintf(command, 500, "curl -X DELETE http://%s:%d/bearer/imsi_bearer/%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c,%u", inet_ntoa(remote_controller), spgw_config.sgw_config.remote_controller_port, IMSI2(new_bearer_ctxt_info_p->sgw_eps_bearer_context_information.imsi),eps_bearer_entry_p->eps_bearer_id);
         system(command);
         OAILOG_DEBUG (LOG_SPGW_APP, "Send delete bearer context request to remote controller\n");
         OAILOG_DEBUG (LOG_SPGW_APP, "%s\n", command);
