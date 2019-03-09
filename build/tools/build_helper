@@ -1004,7 +1004,9 @@ check_install_spgw_software() {
       libxml2-dev \
       mscgen \
       openssl \
+      libcurl4-openssl-dev \
       python"
+            
   elif [[ "$OS_BASEDISTRO" == "fedora" ]]; then
     PACKAGE_LIST="\
       guile-devel \
@@ -1023,6 +1025,7 @@ check_install_spgw_software() {
       mscgen \
       openssl \
       check \
+      libcurl \ 
       python"
   else
     echo_fatal "$OS_DISTRO is not a supported distribution."
