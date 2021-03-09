@@ -11,3 +11,8 @@ openair-cn.creator
 openair-cn.creator.user
 openair-cn.files
 openair-cn.includes
+*.pb.h
+*.pb.cc
+*_pb2.py
+*_pb2_grpc.py
+*.pyc

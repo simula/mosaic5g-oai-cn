@@ -46,6 +46,7 @@ function help()
   echo_error "  -i, --check-installed-software            Check installed software packages necessary to build and run MME (support $SUPPORTED_DISTRO)."
   echo_error "  -u, --unit-tests                          Trigger unit tests."
   echo_error "  -v, --verbose                             Build process verbose."
+  echo_error "  --enable-grpc-api                         Enable GRPC API."
   echo_error " "
 }
 
@@ -62,6 +63,7 @@ function main()
   local -i force=0
   local -i unit_tests=0
   local -i verbose=0
+  local -i grpc=0
   local -i var_check_install_oai_software=0
   local    cmake_args=" "
   local    make_args="-j`nproc`"
@@ -109,6 +111,11 @@ function main()
         verbose=1
         shift;
         ;;
+      --enable-grpc-api)
+        echo "Enable GRPC API"
+        grpc=1
+        shift;
+        ;;
       *)   
         echo "Unknown option $1"
         help
@@ -119,7 +126,7 @@ function main()
   
   if [ $var_check_install_oai_software -gt 0 ];then
     update_package_db
-    check_install_mme_software  $force
+    check_install_mme_software $force $grpc
     echo "MME not compiled, to compile it, re-run build_mme without -i option"
     exit 0
   fi
@@ -172,6 +179,11 @@ function main()
   fi
   cmake_file=./CMakeLists.txt
   cp $OPENAIRCN_DIR/build/mme/CMakeLists.template $cmake_file
+  if [ $grpc -ne 0 ]; then
+      echo 'set (  ENABLE_GRPC_API                 True )' >> $cmake_file
+  else
+      echo 'set (  ENABLE_GRPC_API                 False )' >> $cmake_file
+  fi
   echo 'include(${CMAKE_CURRENT_SOURCE_DIR}/../CMakeLists.txt)' >> $cmake_file
   
   cd ./build

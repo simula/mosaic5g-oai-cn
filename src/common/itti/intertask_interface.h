@@ -49,6 +49,10 @@
 #include "intertask_interface_conf.h"
 #include "intertask_interface_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define ITTI_MSG_ID(mSGpTR)                 ((mSGpTR)->ittiMsgHeader.messageId)
 #define ITTI_MSG_ORIGIN_ID(mSGpTR)          ((mSGpTR)->ittiMsgHeader.originTaskId)
 #define ITTI_MSG_DESTINATION_ID(mSGpTR)     ((mSGpTR)->ittiMsgHeader.destinationTaskId)
@@ -232,6 +236,10 @@ void itti_send_terminate_message(task_id_t task_id);
 void *itti_malloc(task_id_t origin_task_id, task_id_t destination_task_id, ssize_t size);
 
 int itti_free(task_id_t task_id, void *ptr);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INTERTASK_INTERFACE_H_ */
 /* @} */

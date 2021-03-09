@@ -582,6 +582,25 @@ install_latest_freediameter_from_source() {
   fi
 }
 
+# arg1 is force (no interactive script)
+install_grpc_from_source() {
+  cd /tmp
+  git clone https://github.com/grpc/grpc.git
+  cd grpc
+  git checkout v1.4.1
+  git submodule update --init
+  make -j`nproc`
+  $SUDO make install
+  cd third_party/protobuf
+  ./configure
+  make clean
+  make -j`nproc`
+  $SUDO make install
+  $SUDO ldconfig
+  cd /tmp
+  rm -rf /tmp/grpc
+}
+
 #-------------------------------------------------------------------------------
 # arg1 is package name
 test_install_package() {
@@ -756,7 +775,7 @@ check_install_hss_software() {
 }
 
 #-------------------------------------------------------------------------------
-#arg1 is force (no interactive script)
+#arg1 is force (no interactive script), arg2 is grpc
 check_install_mme_software() {
   if ! check_supported_distribution; then
     echo_error "Your distribution $(get_distribution_release) is not supported by openair-cn"
@@ -865,6 +884,21 @@ check_install_mme_software() {
     remove_gnutls_from_source
     $SUDO apt-get install -y nettle-dev nettle-bin
     $SUDO apt-get install -y libgnutls-dev
+
+    if [ $2 -gt 0 ]; then
+      # GTK_PACKAGE depends on protobuf whose version conflicts with grpc
+      # when grpc is enabled, remove GTK_PACKAGE
+      #
+      # FIXME since we are going to remove gtk package here, we don't need to
+      # install it above. remove gtk package from PACKAGE_LIST when grpc is
+      # enabled.
+      $SUDO apt-get remove -qy libgtk-3-dev
+      $SUDO apt-get autoremove -qy
+      install_grpc_from_source $1
+      $SUDO apt-get install -qy python-setuptools
+      $SUDO easy_install pip
+      $SUDO pip install grpcio-tools
+    fi
   fi
   
   install_freediameter_from_source $1

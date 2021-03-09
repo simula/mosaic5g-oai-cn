@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+service MMEAPI {
+    rpc GetMME(GetMMERequest) returns (GetMMEResponse) {}
+}
+
+message GetMMERequest {
+    MME mme = 1;
+}
+
+message GetMMEResponse {
+    MME mme = 1;
+}
+
+message MME {
+    string name = 1;
+    uint32 nb_enb_connected = 2;
+    uint32 nb_ue_attached = 3;
+    uint32 nb_ue_connected = 4;
+    uint32 nb_default_eps_bearers = 5;
+    uint32 nb_s1u_bearers = 6;
+}

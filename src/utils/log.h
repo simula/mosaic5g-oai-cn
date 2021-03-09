@@ -31,6 +31,10 @@
 #ifndef FILE_LOG_SEEN
 #define FILE_LOG_SEEN
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "gcc_diag.h"
 #include <syslog.h>
 
@@ -65,6 +69,9 @@ extern int fd_g_debug_lvl;
 #define LOG_CONFIG_STRING_SPGW_APP_LOG_LEVEL             "SPGW_APP_LOG_LEVEL"
 #define LOG_CONFIG_STRING_UDP_LOG_LEVEL                  "UDP_LOG_LEVEL"
 #define LOG_CONFIG_STRING_UTIL_LOG_LEVEL                 "UTIL_LOG_LEVEL"
+#if ENABLE_GRPC_API
+#define LOG_CONFIG_STRING_GRPC_LOG_LEVEL                 "GRPC_LOG_LEVEL"
+#endif
 
 typedef enum {
   MIN_LOG_ENV = 0,
@@ -106,6 +113,9 @@ typedef enum {
   LOG_CONFIG,
   LOG_MSC,
   LOG_ITTI,
+#if ENABLE_GRPC_API
+  LOG_GRPC,
+#endif
   MAX_LOG_PROTOS,
 } log_proto_t;
 
@@ -148,6 +158,9 @@ typedef struct log_config_s {
   log_level_t   util_log_level;     /*!< \brief Misc utilities log level starting from OAILOG_LEVEL_EMERGENCY up to MAX_LOG_LEVEL (no log) */
   log_level_t   msc_log_level;      /*!< \brief MSC utility log level starting from OAILOG_LEVEL_EMERGENCY up to MAX_LOG_LEVEL (no log) */
   log_level_t   itti_log_level;     /*!< \brief ITTI layer log level starting from OAILOG_LEVEL_EMERGENCY up to MAX_LOG_LEVEL (no log) */
+#if ENABLE_GRPC_API
+  log_level_t   grpc_log_level;
+#endif
   uint8_t       asn1_verbosity_level; /*!< \brief related to asn1c generated code for S1AP verbosity level */
   bool          color;              /*!< \brief use of ANSI styling codes or no */
 } log_config_t;
@@ -329,4 +342,9 @@ int log_get_start_time_sec (void);
 #      define ASN_DEBUG(...)                                         do {vfprintf (stderr , ##__VA_ARGS__);} while(0)
 #    endif
 #  endif
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* FILE_LOG_SEEN */

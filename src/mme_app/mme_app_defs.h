@@ -29,6 +29,11 @@
 
 #ifndef FILE_MME_APP_DEFS_SEEN
 #define FILE_MME_APP_DEFS_SEEN
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "intertask_interface.h"
 #include "mme_app_ue_context.h"
 
@@ -70,13 +75,13 @@ typedef struct {
 
 extern mme_app_desc_t mme_app_desc;
 
-int mme_app_handle_s1ap_ue_capabilities_ind  (const itti_s1ap_ue_cap_ind_t const * s1ap_ue_cap_ind_pP);
+int mme_app_handle_s1ap_ue_capabilities_ind  (const itti_s1ap_ue_cap_ind_t * const s1ap_ue_cap_ind_pP);
 
-void mme_app_handle_s1ap_ue_context_release_complete (const itti_s1ap_ue_context_release_complete_t const
-                                                       *s1ap_ue_context_release_complete);
+void mme_app_handle_s1ap_ue_context_release_complete (const itti_s1ap_ue_context_release_complete_t
+                                                       * const s1ap_ue_context_release_complete);
 
 
-int mme_app_send_s11_release_access_bearers_req (struct ue_context_s *const ue_context_pP);
+int mme_app_send_s11_release_access_bearers_req (struct ue_context_s * const ue_context_pP);
 
 int mme_app_send_s11_create_session_req      (struct ue_context_s * const ue_context_pP);
 
@@ -126,5 +131,9 @@ void mme_app_handle_initial_context_setup_rsp_timer_expiry (struct ue_context_s 
 #define mme_stats_read_lock(mMEsTATS)  pthread_rwlock_rdlock(&(mMEsTATS)->rw_lock)
 #define mme_stats_write_lock(mMEsTATS) pthread_rwlock_wrlock(&(mMEsTATS)->rw_lock)
 #define mme_stats_unlock(mMEsTATS)     pthread_rwlock_unlock(&(mMEsTATS)->rw_lock)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* MME_APP_DEFS_H_ */
